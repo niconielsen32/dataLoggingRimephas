@@ -28,7 +28,7 @@ if __name__ == '__main__':
                 writer = csv.writer(file)
                 writer.writerow(stats.hoursList)
                 writer.writerow(stats.activationsList)
-                writer.writerow(dispenser.numberOfActivations)
+                writer.writerow([dispenser.numberOfActivations])
                 print("Writing to CSV file")
                 running = False
                 print("Terminating program")
