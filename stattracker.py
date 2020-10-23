@@ -18,6 +18,8 @@ class StatTracker:
         self.notification = "notification"
         self.sms = "sms"
 
+        self.day = 0
+
         self.typeOfNotification = self.notification
         self.msg = "The dispenser is under 20" + "%" + " full."
         
@@ -58,7 +60,7 @@ class StatTracker:
     def update_activations_plot(self, numberOfActivations):
         
         dailyHour = dt.datetime.now()
-        dailyHour = dailyHour.strftime(self.hours)
+        dailyHour = dailyHour.strftime(self.seconds)
         hour = int(dailyHour)
         hourString = ""
         if hour < 10:
@@ -83,19 +85,19 @@ class StatTracker:
     
     def update_activations_plot_week(self, numberOfActivations):
 
-        day = dt.datetime.now()
-        day = day.strftime(self.days)
+        self.day = dt.datetime.now()
+        self.day = self.day.strftime(self.days)
         #print("Day: ", day)
 
-        indexDay = self.daysList.index(day)
+        indexDay = self.daysList.index(self.day)
 
-        if day != self.lastDay:
+        if self.day != self.lastDay:
             trailingActivations = numberOfActivations - self.numberOfActivationsDay
             self.activationsListWeek.insert(indexDay, round(trailingActivations))
             self.activationsListWeek.pop(indexDay + 1)
             self.numberOfActivationsDay = numberOfActivations
 
-        self.lastDay = day
+        self.lastDay = self.day
         
     
     def trailing_five_min_activations(self, numberOfActivations):

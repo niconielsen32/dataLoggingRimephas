@@ -31,7 +31,9 @@ if __name__ == '__main__':
                 writer.writerow(stats.daysList)
                 writer.writerow(stats.activationsListWeek)
                 writer.writerow([dispenser.numberOfActivations])
-                print("Writing to CSV file")         
+                print("Writing to CSV file")
+        if keyboard.is_pressed('p'):
+            stats.day = "Saturday"
                 
         
         stats.update_activations_plot(dispenser.numberOfActivations)
