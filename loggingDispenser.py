@@ -28,14 +28,14 @@ if __name__ == '__main__':
                 writer = csv.writer(file)
                 writer.writerow(stats.hoursList)
                 writer.writerow(stats.activationsList)
+                writer.writerow(stats.daysList)
+                writer.writerow(stats.activationsListWeek)
                 writer.writerow([dispenser.numberOfActivations])
-                print("Writing to CSV file")
-                running = False
-                print("Terminating program")
-                
+                print("Writing to CSV file")         
                 
         
-        stats.update_plot(dispenser.numberOfActivations)
+        stats.update_activations_plot(dispenser.numberOfActivations)
+        stats.update_activations_plot_week(dispenser.numberOfActivations)
         dispenser.update()
         
             

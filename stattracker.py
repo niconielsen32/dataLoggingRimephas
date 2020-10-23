@@ -7,9 +7,11 @@ import numpy as np
 class StatTracker:
     def __init__(self):
         self.activationsList = []
+        self.activationsListWeek = [0]*7
         self.numberOfDispenses = 10
         self.dispensesEmptyThreshold = 0.8
         self.almostEmpty = self.numberOfDispenses * self.dispensesEmptyThreshold
+        self.days = "%A"
         self.hours = "%H"
         self.minutes = "%M"
         self.seconds = "%S"
@@ -21,10 +23,12 @@ class StatTracker:
         
         self.hoursStart = 0
         self.hoursEnd = 24
-        self.timeFormat = self.seconds
+        self.timeFormat = self.hours
         self.operatingTime = False
         self.lastHour = 0
+        self.lastDay = 0
         self.numberOfActivationsHour = 0
+        self.numberOfActivationsDay = 0
         
         self.numberOfActivationsMinute = 0
         self.firstMinSkipped = False
@@ -32,6 +36,8 @@ class StatTracker:
         self.lastMinute = 0
         self.fiveMinQue = []
         self.hoursList = self.list_with_operating_hours()
+        self.daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        
 
     def list_with_operating_hours(self):
         hoursList = []
@@ -48,9 +54,11 @@ class StatTracker:
             self.activationsList.append(0)
         return hoursList
     
-    def update_plot(self, numberOfActivations):
+    
+    def update_activations_plot(self, numberOfActivations):
+        
         dailyHour = dt.datetime.now()
-        dailyHour = dailyHour.strftime(self.timeFormat)
+        dailyHour = dailyHour.strftime(self.hours)
         hour = int(dailyHour)
         hourString = ""
         if hour < 10:
@@ -72,6 +80,24 @@ class StatTracker:
 
         self.lastHour = hour
     
+    
+    def update_activations_plot_week(self, numberOfActivations):
+
+        day = dt.datetime.now()
+        day = day.strftime(self.days)
+        #print("Day: ", day)
+
+        indexDay = self.daysList.index(day)
+
+        if day != self.lastDay:
+            trailingActivations = numberOfActivations - self.numberOfActivationsDay
+            self.activationsListWeek.insert(indexDay, round(trailingActivations))
+            self.activationsListWeek.pop(indexDay + 1)
+            self.numberOfActivationsDay = numberOfActivations
+
+        self.lastDay = day
+        
+    
     def trailing_five_min_activations(self, numberOfActivations):
         dailyMinute = dt.datetime.now()
         dailyMinute = dailyMinute.strftime(self.timeFormat)
@@ -91,6 +117,7 @@ class StatTracker:
 
             self.lastMinute = minute
             self.firstMinSkipped = True
+
 
     def pushbullet_notification(self):
         pb = Pushbullet("o.xgWW2FkTk3pGt2oQXM9m9TiQXF2GvUPQ")
